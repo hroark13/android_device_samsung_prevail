@@ -1,0 +1,10 @@
+#!/system/bin/sh
+#
+# mount ext partition from sd card
+
+BB="logwrapper busybox";
+        $BB mount -o noatime,nodiratime,barrier=1 -t ext4 /dev/block/mmcblk0p2 /sd-ext
+
+            $BB chown 1000:1000 /sd-ext
+            $BB chmod 771 /sd-ext
+

@@ -1,0 +1,69 @@
+##
+## BEGIN: system.prop for prevail
+##
+
+rild.libpath=/system/lib/libsec-ril.so
+rild.libargs=-d /dev/smd0
+ro.telephony.ril_class=samsung
+ro.ril.samsung_cdma=true
+ro.telephony.default_network=4
+ro.ril.def.agps.mode=2
+ro.cdma.home.operator.alpha=Boost Mobile
+ro.cdma.home.operator.numeric=31000
+ro.csc.sales_code=SPR
+ril.sales_code=SPR
+net.cdma.pppd.authtype=require-chap
+net.cdma.pppd.user=user[SPACE]SPR
+net.cdma.datalinkinterface=/dev/ttyCDMA0
+net.cdma.ppp.interface=ppp0
+net.connectivity.type=CDMA1
+net.interfaces.defaultroute=cdma
+mobiledata.interfaces=pdp0,eth0,gprs,ppp0
+ro.cdma.voicemail.number=mine
+
+ro.HOME_APP_ADJ=1
+ro.PERCEPTIBLE_APP_ADJ=0
+
+
+# Google
+DEVICE_PROVISIONED=1
+ro.com.android.dataroaming=false
+ro.com.google.locationfeatures=1
+ro.com.google.networklocation=1
+ro.setupwizard.enable_bypass=1
+
+# Graphics
+ro.media.dec.jpeg.memcap=20000000
+ro.opengles.version=131072
+debug.sf.hw=1
+debug.composition.type=mdp
+
+# Key layouts
+hw.keyboards.0.devname=vino_keypad0
+hw.keyboards.65538.devname=vino_headset
+android.keylayout.vino-keypad=/system/usr/keylayout/vino-keypad.kl
+android.keylayout.vino-headset=/system/usr/keylayout/vino-headset.kl
+android.keychar.vino-keypad=/system/usr/keychars/vino-keypad.kcm.bin
+
+# Performance settings
+ro.compcache.default=18
+dalvik.vm.dexopt-flags=m=y
+dalvik.vm.dexopt-data-only=1
+dalvik.vm.execution-mode=int:jit
+dalvik.vm.heapsize=64m
+dalvik.vm.lockprof.threshold=500
+persist.sys.purgeable_assets=1
+persist.sys.use_16bpp_alpha=1
+persist.sys.use_dithering=1
+ro.vold.umsdirtyratio=20
+ro.setupwizard.mode=DISABLED
+windowsmgr.max_events_per_sec=160
+debug.performance.tuning=1
+
+# JNI debugging
+ro.kernel.android.checkjni=0
+dalvik.vm.checkjni=false
+
+##
+## END: system.prop for prevail
+##

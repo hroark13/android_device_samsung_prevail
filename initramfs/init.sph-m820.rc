@@ -1,0 +1,237 @@
+on init
+
+# Insert modules
+    insmod /lib/modules/fsr.ko
+    insmod /lib/modules/fsr_stl.ko
+    insmod /lib/modules/rfs_fat.ko
+    insmod /lib/modules/rfs_glue.ko
+    insmod /lib/modules/jbd2.ko
+    insmod /lib/modules/ext4.ko
+    insmod /lib/modules/sec_param.ko
+
+	chmod 0660 /dev/graphics/fb0
+
+on fs
+
+# Mount partitions
+	mount ext4 /dev/block/stl12 /system wait noatime nodiratime noauto_da_alloc ro
+	mount ext4 /dev/block/stl13 /data wait nosuid nodev noatime nodiratime noauto_da_alloc
+	mount ext4 /dev/block/stl14 /cache wait nosuid nodev noatime nodiratime noauto_da_alloc
+
+on boot
+
+# Set up WiFi and Bluetooth as soon as possible
+	setprop ro.bt.bdaddr_path "/data/.nvmac_bt.info"
+	setprop wifi.interface "eth0"
+
+#Define modem related settings
+	setprop ro.radio.use-ppp yes
+
+# CPU Governor
+	chmod 0660 /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
+	chown root system /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
+	chmod 0660 /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
+	chown root system /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
+	chmod 0660 /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
+	chown root system /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
+
+# For VPN (workaround)
+	mkdir /data/data/misc 0777 system system
+	mkdir /data/data/misc/vpn 0777 system system
+	mkdir /data/data/misc/vpn/profiles 0777 system system
+
+# For sensors
+	mkdir /data/misc/sensors 0777 system misc
+	chmod 0666 /data/misc/sensors/ecs_nvm
+	chmod 0666 /data/misc/sensors/accel_offset
+	chmod 0660 /dev/mmc31xx
+	chmod 0660 /dev/kr3dm_accel
+	chmod 0660 /dev/ecompass_ctrl
+	chown system system /dev/mmc31xx    
+	chown system system /dev/kr3dm_accel    
+	chown system system /dev/ecompass_ctrl    
+
+# Setup bluetooth
+	mkdir /data/misc/bluetooth 0770 bluetooth bluetooth
+	chown bluetooth bluetooth /sys/module/bluetooth_power/parameters/power
+	chown bluetooth bluetooth /sys/class/rfkill/rfkill0/type
+	chown bluetooth bluetooth /sys/class/rfkill/rfkill0/state
+	chown bluetooth bluetooth /proc/bluetooth/sleep/proto
+	chown system system /sys/module/sco/parameters/disable_esco
+	chmod 0666 /sys/module/bluetooth_power/parameters/power
+	chmod 0775 /sys/class/rfkill/rfkill0/state
+	chmod 0775 /sys/class/rfkill/rfkill1/state
+	chmod 0666 /proc/bluetooth/sleep/proto
+	chown bluetooth bluetooth /sys/devices/platform/msm_serial_hs.0/clock
+	chmod 0666 /sys/devices/platform/msm_serial_hs.0/clock
+	chown bluetooth bluetooth /dev/uinput
+	chmod 0660 /dev/uinput
+	chown bluetooth bluetooth /dev/ttyHS0
+	chmod 0660 /dev/ttyHS0
+	
+# WiFi / DHCP
+    mkdir /data/wifi 0777 wifi wifi
+    chown wifi wifi /data/wifi
+    chmod 0777 /data/wifi
+    mkdir /data/misc 01771 system misc
+    mkdir /data/misc/wifi 0771 wifi wifi
+    chown wifi wifi /data/misc/wifi
+    chmod 0777 /data/misc/wifi
+    mkdir /data/misc/dhcp 0777 dhcp dhcp
+    chown dhcp dhcp /data/misc/dhcp
+    chmod 0777 /data/misc/dhcp
+    mkdir /data/misc/wifi/sockets 0777 wifi wifi
+    chown wifi wifi /data/misc/wifi/sockets
+    chmod 0777 /data/misc/wifi/sockets
+    chmod 0664 /system/etc/wifi/wpa_supplicant.conf
+    mkdir /data/system 0775 system system
+    mkdir /data/misc/wifi/hostapd 0770 wifi wifi
+    chmod 0666 /data/bdaddr
+    mkdir /data/misc/wifi/cert 0770 wifi wifi
+    mkdir /data/misc/wifi/cert/as 0770 wifi wifi
+    mkdir /data/misc/wifi/cert/user 0770 wifi wifi
+    setprop wifi.interface "eth0"
+
+# END WiFi / DHCP
+
+# Permission for ril
+	mkdir /data/misc/radio 0774 radio radio
+	mkdir /data/local
+	chmod 0777 /data/local
+	chown radio shell /data/local
+	mkdir /data/local/tmp
+	chmod 0777 /data/local/tmp
+	chown radio shell /data/local/tmp
+
+#Touch multi-touch permissions
+	chmod 0666 /sys/class/sec/ts/firmware1
+
+# For qmuxd socket
+	mkdir /data/radio 0770 radio radio
+	chown radio radio 0770 /data/radio
+	chown radio radio /dev/smdcntl0
+	chown radio radio /dev/smdcntl1
+	chown radio radio /dev/smdcntl2
+
+# SD card polling
+	chown system system /sys/module/g_android/parameters/product_id
+	chown system system /sys/devices/platform/msm_sdcc.1/polling
+	chown system system /sys/devices/platform/msm_sdcc.2/polling
+	chown system system /sys/devices/platform/android_usb/composition
+
+# anr mode chage
+	mkdir /data/anr 0777 system system 
+	chmod 0777 /data/anr
+
+# MAX8899 headset detect 
+	chown radio system /sys/class/switch/h2w/state
+
+# for silent reset
+	chown system system /proc/dump_enable
+	chown system system /proc/silent
+
+# for Dump On/Off
+	chmod 0777 /data/dump_enable
+
+# for multi csc
+	chown radio radio /proc/LinuStoreIII/efs_info 
+	chmod 0664 /proc/LinuStoreIII/efs_info
+
+# for protecting key string
+	chown radio radio /proc/LinuStoreIII/keystr 
+	chmod 0664 /proc/LinuStoreIII/keystr
+
+# sound text data file
+	chmod 0777 /data/soundbooster.txt
+	chmod 0777 /data/aeqcoe.txt
+	chmod 0777 /data/lmfilter.txt
+	chmod 0777 /data/eqfilter.txt
+	chmod 0777 /data/situation.txt
+	chmod 0777 /data/stream_headset.txt
+	chmod 0777 /data/stream_speaker.txt
+
+	# Force Power Down
+	chmod 0660 /sys/class/sec/pm/power_down
+	chown root system /sys/class/sec/pm/power_down	
+
+
+
+	chown radio system /sys/class/switch/sec_earbutton/state
+
+# for datarouter
+	chown system system /dev/dun
+	chown system system /dev/smd0
+	chown system system /sys/devices/platform/msm_hsusb/gadget/usb_state
+	
+
+#  MBkjpark 2011.04.15 : CTS Permission fail issue (remove others write permission, so chown group)
+	chown root system /sys/class/sec/ts/firmware1
+	chown radio radio /sys/class/sec/ts/touchbutton_ctrl
+
+#  MBjslee 2011.04.17 : Factory CMD (Fuel Gauge Reset CMD)Permission fail
+    chown root system /sys/class/power_supply/battery/reset_soc
+
+
+service qmuxd /system/bin/qmuxd
+	user radio
+	group system radio inet
+
+service hciattach /system/bin/brcm_patchram_plus --enable_hci --enable_lpm --baudrate 3000000 \
+	--patchram /system/bin/BCM4329B1_002.002.023.0589.0673.hcd \
+	-d /dev/ttyHS0 
+	user bluetooth
+	group bluetooth net_bt_admin
+	disabled
+
+# to enable wifi
+service wpa_supplicant /system/bin/wpa_supplicant -Dwext -ieth0 -c/data/misc/wifi/wpa_supplicant.conf
+    group wifi inet
+    socket wpa_eth0 dgram 660 wifi wifi
+    disabled
+    oneshot
+
+service dhcpcd_eth0 /system/bin/dhcpcd -ABKL
+    disabled
+    oneshot
+
+service iprenew_eth0 /system/bin/dhcpcd -n
+    disabled
+    oneshot
+
+#for WiFi MFG(TestMode)
+#SecFeatue.CDMA_WIFI
+service mfgloader /system/bin/mfgloader
+    disabled
+    oneshot
+
+service wlandutservice /system/bin/wlandutservice
+    disabled
+    oneshot
+
+service macloader /system/bin/macloader
+    oneshot
+
+# end of wifi
+
+service memsicd /system/bin/memsicd
+	user system
+	group system
+	oneshot
+
+service pppd_cdma /system/bin/pppd_runner
+	user root
+	group radio cache inet misc system audio sdcard_rw net_admin net_raw log
+	disabled
+	oneshot
+
+on property:ril.cdma.data_ready=true
+	start pppd_cdma
+
+on property:ril.cdma.data_ready=false
+	stop pppd_cdma
+	
+on property:persist.service.slate_mode=1
+	write /sys/class/power_supply/battery/batt_slate_mode 1
+
+on property:persist.service.slate_mode=0
+	write /sys/class/power_supply/battery/batt_slate_mode 0
