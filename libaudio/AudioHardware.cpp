@@ -1418,7 +1418,7 @@ status_t AudioHardware::doRouting(AudioStreamInMSM72xx *input)
 #endif
             {
                 LOGI("Routing audio to Speakerphone\n");
-                new_snd_device = SND_DEVICE_MEDIA_SPEAKER;
+                new_snd_device = SND_DEVICE_SPEAKER;
             }
             new_post_proc_feature_mask = (ADRC_ENABLE | EQ_ENABLE | RX_IIR_ENABLE | MBADRC_ENABLE);
 #ifdef HAVE_FM_RADIO
